@@ -1,0 +1,26 @@
+Causing parameters for Mongodb setup:
+Record count :  1000000|10000000|20000000
+Threads      :  32|64
+workload     :  70:30(W:R) 
+W Concerns   :  0|1|2
+j	     :  true|false
+Slowms	     :  50|100
+Threadpool   :  ?
+Maximum Con  :  16384|65536
+
+Tracking Parameters:
+-> Latencies and throughput from Ycsb
+-> Replication Lag
+-> Latencies at each instances
+-> Headroom?
+-> Available Write tickets and read tickets
+-> Open Cursors
+-> No. of client connections in each instance(remote connections on    secondaries) or unused clients
+-> Page faults and pages evicted
+-> Dirty data in cache
+-> read req and write rreq in queue
+-> mongostat,dstat,mongotop, htop?
+
+
+
+Can we perform read operations on secondaries?

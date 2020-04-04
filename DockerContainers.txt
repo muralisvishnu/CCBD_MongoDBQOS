@@ -1,0 +1,69 @@
+sudo apt update
+
+sudo apt install apt-transport-https ca-certificates curl software-properties-common
+
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+
+sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu bionic stable"
+
+sudo apt update
+
+apt-cache policy docker-ce
+
+sudo apt install docker-ce
+
+sudo systemctl status docker
+
+sudo docker images
+
+sudo docker pull ubuntu
+
+sudo docker run -it ubuntu    
+
+sudo docker container run -p <HOST PORT>:<DOCKER PORT> --name <container name> ubuntu
+sudo docker container run -p 27017:27017 --name ss1 ubuntu
+//Ctrl+d to exit the shell
+
+sudo docker ps -a     //list all the containers in the instances
+
+sudo docker rename old_name new_name
+
+sudo docker start shard1_secondary2
+
+sudo docker exec -it shard1_secondary2 /bin/bash
+// will be inside the shell
+
+apt update
+
+apt-get install net-tools          //inet address=172.17.0.2
+
+apt-get install -y mongodb
+
+mkdir /var/lib/mongodb/rs1-3
+
+mongod --replSet rs1 --port 27017 --bind_ip_all --dbpath /var/lib/mongodb/rs1-3 --oplogSize 256
+
+//best part is we can use the same port number also,idk how and all XD
+
+
+rsconf = {
+  _id: "rs1",
+  members: [
+    {
+     _id: 0,
+     host: "172.17.0.2:27017"
+    },
+    {
+     _id: 1,
+     host: "172.17.0.3:27017"
+    },
+    {
+     _id: 2,
+     host: "172.17.0.4:27017"
+    }
+   ]
+}
+
+rs.initiate(rsconf)
+
+sudo docker run -p <HOST_PORT>:<DOCKER PORT> -it ubuntu

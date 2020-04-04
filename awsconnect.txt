@@ -1,0 +1,37 @@
+Try using powershell to the max please :)
+
+Open powershell as administrator by searching on start and right clicking on it
+then use these commands:
+
+--> Set-ExecutionPolicy Bypass -Scope Process -Force; iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))
+
+(if this doesnt work, then use cmd, run as adminstrator by right clicking then use this command:
+
+--> @"%SystemRoot%\System32\WindowsPowerShell\v1.0\powershell.exe" -NoProfile -InputFormat None -ExecutionPolicy Bypass -Command "iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))" && SET "PATH=%PATH%;%ALLUSERSPROFILE%\chocolatey\bin"
+
+
+***try not to use this for uniformity***)
+--------------------------------------------------------
+Then in the same powershell
+
+--> choco install openssh
+
+go to the folder which has ccbdprojectsav.pem(This is a very important file apparently so keep it somewhere safe)
+
+--> $path = ".\ccbdprojectsav.pem"
+
+--> icacls.exe $path /reset
+
+--> icacls.exe $path /GRANT:R "$($env:USERNAME):(R)"
+
+--> icacls.exe $path /inheritance:r
+
+(these are initial steps for a newly created instance, need not be done everytime)
+------------------------------------------------------
+
+(for connecting always use this)
+
+--> ssh -i "ccbdprojectsav.pem" ubuntu@ec2-3-226-253-167.compute-1.amazonaws.com
+
+
+btw before all this, check if the instances are running on aws and if the ip address is matching or not

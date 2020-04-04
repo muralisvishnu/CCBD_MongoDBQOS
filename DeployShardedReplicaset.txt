@@ -1,0 +1,79 @@
+sudo mkdir /var/lib/mongodb/srs3-2
+sudo chmod 777 /var/lib/mongodb/srs3-2
+
+mongod --shardsvr --replSet srs3  --dbpath /var/lib/mongodb/srs3-0 --bind_ip_all --port 27019
+rs.initiate(
+  {
+    _id: "cf",
+    configsvr: true,
+    members: [
+      { _id : 0, host : "10.174.0.2:27017" },
+      { _id : 1, host : "10.174.0.2:27018" },
+      { _id : 2, host : "10.174.0.2:27019" }
+    ]
+  }
+)
+
+VM instances included srs1:
+shard1-primary
+shard1-secondary1
+shard2-secondary1
+
+srs2
+shard2-primary
+shard2-secondary2
+shard3-secondary1
+
+srs3
+shard3-primary
+shard3-secondary2
+shard1-secondary2
+
+
+rs.initiate(
+  {
+    _id : "srs1",
+    members: [
+      { _id : 0, host : "10.148.0.2:27017" },    
+      { _id : 1, host : "10.148.0.5:27017" },
+      { _id : 2, host : "10.146.0.3:27017" }
+    ]
+  }
+)
+
+rs.initiate(
+  {
+    _id : "srs2",
+    members: [
+      { _id : 0, host : "10.146.0.2:27018" },    
+      { _id : 1, host : "10.146.0.4:27018" },
+      { _id : 2, host : "10.160.15.201:27018" }
+    ]
+  }
+)
+
+rs.initiate(
+  {
+    _id : "srs3",
+    members: [
+      { _id : 0, host : "10.160.15.200:27019" },    
+      { _id : 1, host : "10.160.15.202:27019" },
+      { _id : 2, host : "10.148.0.4:27019" }
+    ]
+  }
+)
+
+mongos --configdb cf/10.174.0.2:27017,10.174.0.2:27018,10.174.0.2:27019 --bind_ip_all --port 27020
+
+sh.addShard( "srs1/10.148.0.2:27017,10.148.0.5:27017,10.146.0.3:27017")
+
+sh.addShard( "srs2/10.146.0.2:27018,10.146.0.4:27018,10.160.15.201:27018")
+
+sh.addShard( "srs3/10.160.15.200:27019,10.160.15.202:27019,10.148.0.4:27019")
+
+sh.enableSharding("ycsb")
+db.c2.ensureIndex({"_id": "hashed"})
+sh.shardCollection("ycsb.usertable", { "_id" : "hashed" } )
+
+
+./bin/ycsb load mongodb -s -P workloads/workloada -p recordcount=1000000 -threads 16 -p mongodb.url=mongodb://10.174.0.2:27020/ycsb?w=0

@@ -1,0 +1,45 @@
+nano /etc/mongod.conf 
+//to now your dbpath and mongdb port, so whatever port mentioned there becomes primary replica 
+>>>sudo chmod 777 /var/lib/mongodb
+>>>mkdir -p /var/lib/mongodb/rs0-0  /var/lib/mongodb/rs0-1 /var/lib/mongodb/rs0-2
+
+>>>mongod --replSet rs0 --port 27019 --bind_ip localhost --dbpath /var/lib/mongodb3/rs0-2 --smallfiles --oplogSize 128
+// Thrice with different port number and dbpath(the directories you created now, one port number to one dbpath)
+>>> mongo --port 27017
+// any port number but initially put 27017
+//inside the mongo terminal
+
+rsconf = {
+  _id: "rs1",
+  members: [
+    {
+     _id: 0,
+     host: "172.17.0.2:27017"
+    },
+    {
+     _id: 1,
+     host: "172.17.0.3:27017"
+    },
+    {
+     _id: 2,
+     host: "172.17.0.4:27017"
+    }
+   ]
+}
+//copy paste the above json object as it is
+rs.initiate(rsconf)
+//very important step, i made it wrong twice
+//you should be able to see rs0:Primary in 27017
+//if you go to mongo --port 27018 you will see rs0:Secondary and for  mongo --port 27019 you will see rs0:Secondary as well
+//in primary mongo you can also check the following commands
+>>>rs.conf()
+>>>rs.status()
+./bin/ycsb load mongodb-async -s -P workloads/workloadv > outputLoad.txt
+./bin/ycsb run mongodb-async -s -P workloads/workloadv > outputRun.txt
+
+mongod --replSet rs0 --port 27017 --bind_ip_all --dbpath /var/lib/mongodb/rs0-0 --oplogSize 256
+
+172.17.0.2
+172.17.0.3
+172.17.0.4
+ 

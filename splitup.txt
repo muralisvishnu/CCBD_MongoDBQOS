@@ -1,0 +1,20 @@
+Archana:
+Recordcount : 20000000
+Threads     : 64
+Workload    : 70:30(W:R)
+W concerns  : 0
+j	    : true|false
+
+SaiPriya:
+Recordcount : 20000000
+Threads     : 64
+Workload    : 70:30(W:R)
+W concerns  : 2
+j	    : true|false
+
+Vishnu:
+Recordcount : 20000000
+Threads     : 64
+Workload    : 70:30(W:R)
+W concerns  : 1
+j	    : true|false
